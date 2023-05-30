@@ -29,7 +29,53 @@ $routes->set404Override();
 
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
-$routes->get('/', 'Home::index');
+$routes->get('/', 'login::login');
+$routes->post('/login', 'Login::validasi_login');
+$routes->get('/Logout/logout', 'logout::logout');
+// $routes->get('index.php/Login/validasi_login', 'login::validasi_login');
+$routes->group('', ['filter' => 'auth'], function ($routes) {
+    // beranda
+    $routes->get('/Beranda/index', 'beranda::index');
+    // user
+    $routes->get('/User/index', 'user::index');
+    $routes->get('/User/form_tambah', 'user::form_tambah');
+    $routes->post('/User/tambah', 'user::tambah');
+    $routes->get('/User/form_edit/(:num)', 'User::form_edit/$1');
+    $routes->post('/User/update/(:num)', 'User::update/$1');
+    $routes->get('/User/hapus/(:num)', 'User::hapus/$1');
+    $routes->get('/User/select_data/(:num)', 'User::select_data/$1');
+    // menu
+    $routes->get('/menu/index', 'menu::index');
+    $routes->get('/menu/form_tambah', 'menu::form_tambah');
+    $routes->post('/menu/tambah', 'menu::tambah');
+    $routes->get('/menu/form_edit/(:num)', 'menu::form_edit/$1');
+    $routes->post('/menu/update/(:num)', 'menu::update/$1');
+    $routes->get('/menu/hapus/(:num)', 'menu::hapus/$1');
+    // pemesanan
+    $routes->get('/pemesanan/index', 'pemesanan::index');
+    $routes->get('/pemesanan/pesan/(:num)', 'pemesanan::pesan/$1');
+    // pembayaran
+    $routes->get('/pembayaran/index', 'pembayaran::index');
+    $routes->get('/pembayaran/hapus/(:any)', 'pembayaran::hapus/$1');
+    $routes->get('/Pembayaran/bayar/', 'pembayaran::bayar');
+    //level menu
+    $routes->get('/levelmenu/index', 'levelmenu::index');
+    $routes->get('/levelmenu/form_edit/(:num)', 'levelmenu::form_edit/$1');
+    $routes->post('/levelmenu/update/(:num)', 'levelmenu::update/$1');
+    //kasir
+    $routes->get('/Kasir/index', 'kasir::index');
+    $routes->get('/Kasir/bayar/(:num)', 'Kasir::bayar/$1');
+    $routes->post('/kasir/insert_bayar/(:num)', 'Kasir::insert_bayar/$1');
+    $routes->get('/Kasir/detail_pesanan/(:num)', 'Kasir::detail_pesanan/$1');
+    //nota
+    $routes->get('/laporan/index/', 'laporan::index');
+    $routes->get('/laporan/cetak/', 'laporan::cetak');
+    $routes->get('/laporan/nota/(:num)', 'laporan::nota/$1');
+    
+});
+// $routes->setAutoRoute(true);
+
+
 
 /*
  * --------------------------------------------------------------------
