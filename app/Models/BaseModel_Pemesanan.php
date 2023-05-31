@@ -50,6 +50,6 @@ class BaseModel_Pemesanan extends Model
         $builder->where('tb_detail_pemesanan.id_pemesanan', $id_pemesanan);
         $query = $builder->get();
         return $query->getResult();
-        return $this->find($id_pemesanan);
+        // return $this->find($id_pemesanan);
     }  
 }
