@@ -55,7 +55,7 @@ class Login extends BaseController
                 return redirect()->to('Beranda/index');
                 }
             } else {
-                return redirect()->to('Login/login')->with('error', 'Username atau Password salah');
+                return redirect()->to('/')->with('error', 'Username atau Password salah');
                 // username tidak ditemukan
             }
         }

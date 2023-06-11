@@ -24,11 +24,6 @@
 </head>
 
 <body id="page-top">
-    <?php if (session()->getFlashdata('success')): ?>
-        <script>
-            alert("<?php echo session()->getFlashdata('success'); ?>");
-        </script>
-    <?php endif; ?>
 
     <!-- Page Wrapper -->
     <div id="wrapper">
@@ -46,7 +41,7 @@
             <div class="sidebar-heading">
                 Menu
             </div>   
-            <?php
+                <?php
                     $db = db_connect();
                     session()->get('id_level');
                     $id_level = $_SESSION['level'];
@@ -78,7 +73,6 @@
                         }
                     }
                 ?>
-
             <!-- Divider -->
             <hr class="sidebar-divider">
 
@@ -102,7 +96,7 @@
                     <!-- Topbar Navbar -->
                     <?php 
                         session()->get('id_user');
-                        $nama = $_SESSION['nama'];
+                        $nama = $_SESSION['username'];
                     ?>
                     <ul class="navbar-nav ml-auto">
                         <div class="topbar-divider d-none d-sm-block"></div>
@@ -134,57 +128,73 @@
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Daftar Pesanan</h1>
+                        <h1 class="h3 mb-0 text-gray-800">User</h1>
+                        <button type="button" class="btn btn-primary">
+                            <a href="<?php echo base_url('laporan/cetak/'.$bulan)?>" style="color:white;text-decoration:none;">
+                                Cetak</a>
+                        </button>
                     </div>
                     <!-- Content Row -->
                     <!-- Dashboard -->
                     <div class="row">
-            <div class="card-body">
-                <?php if (session()->has('success')) : ?>
-                    <div class="alert alert-success">
-                        <?= session('success') ?>
-                    </div>
-                <?php endif; ?>
-                <?php if (session()->has('error')) : ?>
-                    <div class="alert alert-danger">
-                        <?= session('error') ?>
-                    </div>
-                <?php endif; ?>
-                <div class="table-responsive">
-                    <table class="table table-hover" id="dataTable" width="100%" cellspacing="0">
-                        <thead>
-                            <tr>
-                                <th>Id Pemesanan</th>
-                                <th>Nama Pelanggan</th>
-                                <th>Tanggal</th>
-                                <th>Jumlah</th>
-                                <th>Status</th>
-                                <th>Opsi</th>
-                            </tr>
-                        </thead>
-                        <tbody>  
-                            <?php foreach ($tampil as $tampil) : ?>
-                        <tr>
-                        <tr>
-                            <td><?= $tampil->id_pemesanan ?></td>
-                            <td><?= $tampil->nama ?></td>
-                            <td><?= $tampil->tanggal_pemesanan ?></td>
-                            <td><?= $tampil->jumlah ?></td>
-                            <td><?= $tampil->status ?></td>
-                            <td>
-                                <a href="<?php echo base_url('/Kasir/bayar/'.$tampil->id_pemesanan); ?>">
-                                    <button type="button" class="btn btn-danger">Pembayaran</button>
-                                </a>
-                                <a href="<?php echo base_url('/Kasir/detail_pesanan/'.$tampil->id_pemesanan); ?>">
-                                    <button type="button" class="btn btn-danger">Detail</button>
-                                </a>
-                            </td>
-                            </tr>
-                            <?php endforeach; ?>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>  
+                    <form method="get" action="<?php echo base_url('laporan/index'); ?>">
+                        <label for="bulan">Pilih Bulan:</label>
+                        <select class="form-select" aria-label="Default select example" name="bulan" id="bulan">
+                            <?php for ($i = 1; $i <= 12; $i++) : ?>
+                                <option value="<?php echo $i; ?>" <?php if ($i == $bulan) echo 'selected'; ?>><?php echo date('F', mktime(0, 0, 0, $i, 1)); ?></option>
+                            <?php endfor; ?>
+                        </select>
+                        <button type="submit" class="btn btn-primary">Tampilkan</button>
+                    </form>
+                    <div class="card-body">
+                        <?php if (session()->has('success')) : ?>
+                            <div class="alert alert-success">
+                                <?= session('success') ?>
+                            </div>
+                        <?php endif; ?>
+                        <?php if (session()->has('error')) : ?>
+                            <div class="alert alert-danger">
+                                <?= session('error') ?>
+                            </div>
+                        <?php endif; ?>
+                        <div class="table-responsive">
+                            <table class="table table-hover" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>Id Pembayaran</th>
+                                        <th>Id Pemesanan</th>
+                                        <th>Id User</th>
+                                        <th>Id Kasir</th>
+                                        <th>Tanggal</th>
+                                        <th>Jumlah</th>
+                                        <th>Total</th>
+                                        <th>Bayar</th>
+                                        <th>Kembali</th>
+                                    </tr>
+                                </thead>
+                                <tbody>  
+                                <?php
+                                    $no = 1;
+                                    foreach($tampil as $tampil): 
+                                ?>
+                                <tr>
+                                    <td><?php echo $tampil->id_pembayaran ?></td>
+                                    <td><?php echo $tampil->id_pemesanan ?></td>
+                                    <td><?php echo $tampil->nama_user ?></td>
+                                    <td><?php echo $tampil->nama_kasir ?></td>
+                                    <td><?php echo $tampil->tanggal_pembayaran ?></td>
+                                    <td><?php echo $tampil->jumlah ?></td>
+                                    <td><?php echo $tampil->total_harga ?></td>
+                                    <td><?php echo $tampil->bayar ?></td>
+                                    <td><?php echo $tampil->kembalian ?></td>
+                                </tr>
+                                <?php endforeach;?>
+                                </tbody>
+                            </table>
+                    </div>  
+                    </div>  
+                    </div>  
+                    </div>  
 
             <!-- End of Main Content -->
 
@@ -208,25 +218,6 @@
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
     </a>
-
-    <!-- Bayar Modal-->
-    <div class="modal fade" id="bayarModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ingin Memesan?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Mau nambah ni</button>
-                    <a class="btn btn-primary" href="/Pembayaran/bayar">Pesan</a>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Logout Modal-->
     <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -263,6 +254,8 @@
     <!-- Page level custom scripts -->
     <script src="<?=base_url()?>/template/js/demo/chart-area-demo.js"></script>
     <script src="<?=base_url()?>/template/js/demo/chart-pie-demo.js"></script>
+    
+    <!-- Page level custom scripts -->
 
 </body>
 

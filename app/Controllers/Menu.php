@@ -53,27 +53,26 @@ class Menu extends BaseController
     }
     public function update($id_menu)
     {
-            $model = model('BaseModel_Menu');
-            $gambar = $this->request->getFile('gambar');
-            if ($gambar->isValid() && !$gambar->hasMoved())
-            {
-                $newName = $gambar->getRandomName();
-                $gambar->move('template/img', $newName);
-                if (isset($gambar)){
-                    $input_gambar = $newName;
-                }else{
-                    $input_gambar = $this->request->getPost('lama');
-                }
-            }
-            $data = [
-                'nama_menu' => $this->request->getPost('nama_menu'),
-                'harga' => $this->request->getPost('harga'),
-                'gambar' => $this->request->getPost('lama'),
-                // 'gambar' => $input_gambar,
-            ];
+        $model = model('BaseModel_Menu');
+        $gambar = $this->request->getFile('gambar');
+        $input_gambar = $this->request->getPost('lama');
 
-            $model->updateMenu($id_menu, $data);
-        return redirect()->to('menu/index')->with('success', 'Data berhasil dipudate');
+        if ($gambar->isValid() && !$gambar->hasMoved()) {
+            $newName = $gambar->getRandomName();
+            $gambar->move('template/img', $newName);
+            $input_gambar = $newName;
+        }
+
+        $data = [
+            'nama_menu' => $this->request->getPost('nama_menu'),
+            'harga' => $this->request->getPost('harga'),
+            'status' => $this->request->getPost('status'),
+            'gambar' => $input_gambar,
+        ];
+
+        $model->updateMenu($id_menu, $data);
+        return redirect()->to('menu/index')->with('success', 'Data berhasil diupdate');
+
     }
     public function hapus($id_menu)
     {

@@ -69,7 +69,10 @@ $routes->group('', ['filter' => 'auth'], function ($routes) {
     $routes->get('/Kasir/detail_pesanan/(:num)', 'Kasir::detail_pesanan/$1');
     //nota
     $routes->get('/laporan/index/', 'laporan::index');
-    $routes->get('/laporan/cetak/', 'laporan::cetak');
+    $routes->get('/laporan/grafik/', 'laporan::grafik');
+    $routes->get('/laporan/best_seller/', 'laporan::best_seller');
+    $routes->get('/laporan/best_seller/(:num)', 'laporan::best_seller/$1');
+    $routes->get('/laporan/cetak/(:num)', 'laporan::cetak/$1');
     $routes->get('/laporan/nota/(:num)', 'laporan::nota/$1');
     
 });

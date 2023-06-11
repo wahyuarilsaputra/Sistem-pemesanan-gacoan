@@ -13,7 +13,29 @@ class BaseModel_Pembayaran extends Model
     protected $allowedFields = ['id_pemesanan','nama_menu','jumlah'];
     public function view_data()
     {
-        $query = $this->db->table($this->table)->get();
+        $builder = $this->db->table($this->table);
+        $builder->select('tb_pembayaran.id_pembayaran,tb_pembayaran.id_pemesanan,tb_user.id_user, tb_user.nama as nama_user,tb_kasir.nama as nama_kasir, tb_pembayaran.tanggal_pembayaran, tb_pembayaran.jumlah, tb_pembayaran.total_harga,tb_pembayaran.bayar,tb_pembayaran.kembalian');
+        $builder->join('tb_user', 'tb_pembayaran.id_user = tb_user.id_user');
+        $builder->join('tb_user AS tb_kasir', 'tb_pembayaran.id_kasir = tb_kasir.id_user');
+        $query = $builder->get();
+        return $query->getResult();
+    }
+    public function data_bulan()
+    {
+        $query = $this->select("DATE_FORMAT(tanggal_pembayaran, '%Y-%m') as bulan, count(id_pembayaran) as total")
+                ->groupBy('bulan')
+                ->orderBy('bulan', 'ASC')
+                ->findAll();
+        return $query;
+    }
+    public function getDatabyBulan($bulan)
+    {
+    $builder = $this->db->table($this->table);
+        $builder->select('tb_pembayaran.id_pembayaran,tb_pembayaran.id_pemesanan,tb_user.id_user, tb_user.nama as nama_user,tb_kasir.nama as nama_kasir, tb_pembayaran.tanggal_pembayaran, tb_pembayaran.jumlah, tb_pembayaran.total_harga,tb_pembayaran.bayar,tb_pembayaran.kembalian');
+        $builder->join('tb_user', 'tb_pembayaran.id_user = tb_user.id_user');
+        $builder->join('tb_user AS tb_kasir', 'tb_pembayaran.id_kasir = tb_kasir.id_user');
+        $builder->where('MONTH(tb_pembayaran.tanggal_pembayaran)', $bulan);
+        $query = $builder->get();
         return $query->getResult();
     }
     public function select_data($id_pembayaran)

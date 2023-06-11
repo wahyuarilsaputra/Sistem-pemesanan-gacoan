@@ -44,7 +44,7 @@
                 <?php
                     $db = db_connect();
                     session()->get('id_level');
-                    $id_level = $_SESSION['id_user'];
+                    $id_level = $_SESSION['level'];
                     $sql = "select nama_interface from tb_interface
                             where id_interface in
                             (
@@ -53,12 +53,26 @@
                             )";
                     $query = $db->query($sql,session()->get('id_level'));
                     foreach ($query->getResultArray() as $row){
-                        echo '<li class="nav-item">
-                        <a class="nav-link" href="'.site_url($row['nama_interface']).'/index"><span>'.$row['nama_interface'].'</span></a>
-                        </li>';
+                        if ($row['nama_interface'] == 'laporan') {
+                            echo '<li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown">
+                                        <span>'.$row['nama_interface'].'</span>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" href="'.base_url('laporan/index').'">Data Laporan</a>
+                                        <a class="dropdown-item" href="'.base_url('laporan/grafik').'">Grafik Laporan</a>
+                                        <a class="dropdown-item" href="'.base_url('laporan/best_seller').'">Menu Best Seller</a>
+                                    </div>
+                                </li>';
+                        }else {
+                            echo '<li class="nav-item">
+                                    <a class="nav-link" href="'.site_url($row['nama_interface']).'/index">
+                                        <span>'.$row['nama_interface'].'</span>
+                                    </a>
+                                </li>';
+                        }
                     }
                 ?>
-
             <!-- Divider -->
             <hr class="sidebar-divider">
 
@@ -114,61 +128,14 @@
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">User</h1>
-                        <button type="button" class="btn btn-primary">
-                            <a href="<?php echo base_url('laporan/cetak')?>" style="color:white;text-decoration:none;">
-                                Cetak</a>
-                        </button>
+                        <h1 class="h3 mb-0 text-gray-800">Grafik Per bulan</h1>
                     </div>
                     <!-- Content Row -->
                     <!-- Dashboard -->
                     <div class="row">
-            <div class="card-body">
-                <?php if (session()->has('success')) : ?>
-                    <div class="alert alert-success">
-                        <?= session('success') ?>
-                    </div>
-                <?php endif; ?>
-                <?php if (session()->has('error')) : ?>
-                    <div class="alert alert-danger">
-                        <?= session('error') ?>
-                    </div>
-                <?php endif; ?>
-                <div class="table-responsive">
-                    <table class="table table-hover" id="dataTable" width="100%" cellspacing="0">
-                        <thead>
-                            <tr>
-                                <th>Id Pembayaran</th>
-                                <th>Id Pemesanan</th>
-                                <th>Id User</th>
-                                <th>Id Kasir</th>
-                                <th>Tanggal</th>
-                                <th>Jumlah</th>
-                                <th>Total</th>
-                                <th>Bayar</th>
-                                <th>Kembali</th>
-                            </tr>
-                        </thead>
-                        <tbody>  
-                        <?php
-                            $no = 1;
-                            foreach($tampil as $tampil): 
-                        ?>
-                        <tr>
-                            <td><?php echo $tampil->id_pembayaran ?></td>
-                            <td><?php echo $tampil->id_pemesanan ?></td>
-                            <td><?php echo $tampil->id_user ?></td>
-                            <td><?php echo $tampil->id_kasir ?></td>
-                            <td><?php echo $tampil->tanggal_pembayaran ?></td>
-                            <td><?php echo $tampil->jumlah ?></td>
-                            <td><?php echo $tampil->total_harga ?></td>
-                            <td><?php echo $tampil->bayar ?></td>
-                            <td><?php echo $tampil->kembalian ?></td>
-                        </tr>
-                        <?php endforeach;?>
-                        </tbody>
-                    </table>
-                </div>  
+                        <canvas id="chart"></canvas>
+                    </div>  
+                    </div>  
 
             <!-- End of Main Content -->
 
@@ -228,6 +195,49 @@
     <!-- Page level custom scripts -->
     <script src="<?=base_url()?>/template/js/demo/chart-area-demo.js"></script>
     <script src="<?=base_url()?>/template/js/demo/chart-pie-demo.js"></script>
+    
+    <!-- Page level custom scripts -->
+    <script>
+    var ctx = document.getElementById('chart').getContext('2d');
+    var chart = new Chart(ctx, {
+        type: 'horizontalBar',
+        data: {
+            labels: [
+                'Juni',
+                'Juli',
+                'Agustus',
+                'September',
+                'Oktober',
+                'November',
+                'Desember',
+                'Januari',
+                'Februari',
+                'Maret',
+                'April',
+                'Mei'
+            ],
+            datasets: [{
+                label: 'Jumlah Pesanan',
+                data: [
+                    <?php foreach ($laporan as $row) : ?>
+                        <?= $row['total']; ?>,
+                    <?php endforeach; ?>
+                ],
+                backgroundColor: 'rgb(66, 144, 245, 0.8)',
+                borderColor: 'rgb(66, 144, 245, 0.8)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+
 
 </body>
 

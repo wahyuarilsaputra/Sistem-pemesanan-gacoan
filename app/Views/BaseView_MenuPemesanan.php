@@ -25,11 +25,6 @@
 
 <body id="page-top">
 
-<?php if (session()->getFlashdata('success')): ?>
-        <script>
-            alert("<?php echo session()->getFlashdata('success'); ?>");
-        </script>
-    <?php endif; ?>
     <!-- Page Wrapper -->
     <div id="wrapper">
 
@@ -41,15 +36,15 @@
                 <div class="sidebar-brand-text mx-3" style="font-size: 15px;">Warung Gacoan</div>
             </a>
 
-            <!-- Divider -->
+            <!-- Divider -->`
             <hr class="sidebar-divider">
             <div class="sidebar-heading">
                 Menu
             </div>   
-                <?php
+            <?php
                     $db = db_connect();
                     session()->get('id_level');
-                    $id_level = $_SESSION['id_user'];
+                    $id_level = $_SESSION['level'];
                     $sql = "select nama_interface from tb_interface
                             where id_interface in
                             (
@@ -58,9 +53,24 @@
                             )";
                     $query = $db->query($sql,session()->get('id_level'));
                     foreach ($query->getResultArray() as $row){
-                        echo '<li class="nav-item">
-                        <a class="nav-link" href="'.site_url($row['nama_interface']).'/index"><span>'.$row['nama_interface'].'</span></a>
-                        </li>';
+                        if ($row['nama_interface'] == 'laporan') {
+                            echo '<li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown">
+                                        <span>'.$row['nama_interface'].'</span>
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" href="'.base_url('laporan/index').'">Data Laporan</a>
+                                        <a class="dropdown-item" href="'.base_url('laporan/grafik').'">Grafik Laporan</a>
+                                        <a class="dropdown-item" href="'.base_url('laporan/best_seller').'">Menu Best Seller</a>
+                                    </div>
+                                </li>';
+                        }else {
+                            echo '<li class="nav-item">
+                                    <a class="nav-link" href="'.site_url($row['nama_interface']).'/index">
+                                        <span>'.$row['nama_interface'].'</span>
+                                    </a>
+                                </li>';
+                        }
                     }
                 ?>
 

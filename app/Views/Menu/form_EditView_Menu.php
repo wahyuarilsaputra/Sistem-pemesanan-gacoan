@@ -45,7 +45,7 @@
                 <label for="" style="margin-bottom: 5px;">Status</label>
                 <select class="form-control form-control-user" name="status" id="status">
                     <option value="tersedia" <?php if ($tampil['status'] == "tersedia") echo 'selected="selected"'; ?>>Tersedia</option>
-                    <option value="kosong" <?php if ($tampil['status'] == "kosong") echo 'selected="selected"'; ?>>Kosong</option>
+                    <option value="tidak" <?php if ($tampil['status'] == "tidak") echo 'selected="selected"'; ?>>Tidak Tersedia</option>
                 </select>
                 <div class="form-group">
                     <label for="text-input" class=" form-control-label">Gambar</label>

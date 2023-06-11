@@ -23,7 +23,8 @@
         <tr>
             <th>id pembayaran</th>
             <th>id pemesanan</th>
-            <th>id user</th>
+            <th>nama user</th>
+            <th>nama kasir</th>
             <th>tanggal</th>
             <th>jumlah</th>
             <th>total harga</th>
@@ -34,7 +35,8 @@
         <tr>
             <td><?= $tampil->id_pembayaran; ?></td>
             <td><?= $tampil->id_pemesanan; ?></td>
-            <td><?= $tampil->id_user; ?></td>
+            <td><?= $tampil->nama_user; ?></td>
+            <td><?= $tampil->nama_kasir; ?></td>
             <td><?= $tampil->tanggal_pembayaran; ?></td>
             <td><?= $tampil->jumlah; ?></td>
             <td><?= $tampil->total_harga; ?></td>
